@@ -26,6 +26,14 @@ pub(crate) fn extract_op(s: &str) -> (&str, &str) {
     (&s[1..], &s[0..1])
 }
 
+pub(crate) fn tag<'a, 'b>(starting_text: &'a str, s: &'b str) -> &'b str {
+    if s.starts_with(starting_text) {
+        &s[starting_text.len()..]
+    } else {
+        panic!("expected {}", starting_text);
+    }
+}
+
 pub(crate) fn extract_ident(s: &str) -> (&str, &str) {
     let input_starts_with_alpahbetic = s
         .chars()
@@ -95,5 +103,10 @@ mod tests {
     #[test]
     fn cannot_extract_ident_beginning_with_number() {
         assert_eq!(extract_ident("1234abce wer"), ("1234abce wer", ""));
+    }
+
+    #[test]
+    fn tag_word() {
+        assert_eq!(tag("let", "let a"), " a");
     }
 }

@@ -9,22 +9,14 @@ pub struct BindingDef {
 
 impl BindingDef {
     pub fn new(s: &str) -> (&str, Self) {
-        let s = if s.starts_with("let") {
-            &s[3..]
-        } else {
-            panic!("expected let")
-        };
+        let s = utils::tag("let", s);
 
         let (s, _) = utils::extract_whitespace(s);
 
         let (s, name) = utils::extract_ident(s);
         let (s, _) = utils::extract_whitespace(s);
 
-        let s = if s.starts_with("=") {
-            &s[1..]
-        } else {
-            panic!("expected equal sign");
-        };
+        let s = utils::tag("=", s);
         let (s, _) = utils::extract_whitespace(s);
 
         let (s, val) = Expr::new(s);
