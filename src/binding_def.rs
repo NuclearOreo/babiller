@@ -1,4 +1,5 @@
 use crate::expr::Expr;
+use crate::utils;
 
 #[derive(Debug, PartialEq)]
 pub struct BindingDef {
@@ -8,7 +9,33 @@ pub struct BindingDef {
 
 impl BindingDef {
     pub fn new(s: &str) -> (&str, Self) {
-        todo!()
+        let s = if s.starts_with("let") {
+            &s[3..]
+        } else {
+            panic!("expected let")
+        };
+
+        let (s, _) = utils::extract_whitespace(s);
+
+        let (s, name) = utils::extract_ident(s);
+        let (s, _) = utils::extract_whitespace(s);
+
+        let s = if s.starts_with("=") {
+            &s[1..]
+        } else {
+            panic!("expected equal sign");
+        };
+        let (s, _) = utils::extract_whitespace(s);
+
+        let (s, val) = Expr::new(s);
+
+        (
+            s,
+            Self {
+                name: name.to_string(),
+                val,
+            },
+        )
     }
 }
 

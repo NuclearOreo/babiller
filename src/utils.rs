@@ -26,6 +26,20 @@ pub(crate) fn extract_op(s: &str) -> (&str, &str) {
     (&s[1..], &s[0..1])
 }
 
+pub(crate) fn extract_ident(s: &str) -> (&str, &str) {
+    let input_starts_with_alpahbetic = s
+        .chars()
+        .next()
+        .map(|c| c.is_ascii_alphabetic())
+        .unwrap_or(false);
+
+    if input_starts_with_alpahbetic {
+        take_while(|c| c.is_ascii_alphabetic(), s)
+    } else {
+        (s, "")
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -72,5 +86,14 @@ mod tests {
     #[test]
     fn extract_spaces() {
         assert_eq!(extract_whitespace("    1"), ("1", "    "));
+    }
+
+    #[test]
+    fn extract_alphabetic_ident() {
+        assert_eq!(extract_ident("abc dfe"), (" dfe", "abc"));
+    }
+    #[test]
+    fn cannot_extract_ident_beginning_with_number() {
+        assert_eq!(extract_ident("1234abce wer"), ("1234abce wer", ""));
     }
 }
