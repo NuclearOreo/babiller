@@ -42,7 +42,7 @@ pub(crate) fn extract_ident(s: &str) -> (&str, &str) {
         .unwrap_or(false);
 
     if input_starts_with_alpahbetic {
-        take_while(|c| c.is_ascii_alphabetic(), s)
+        take_while(|c| c.is_ascii_alphanumeric(), s)
     } else {
         (s, "")
     }
@@ -100,6 +100,12 @@ mod tests {
     fn extract_alphabetic_ident() {
         assert_eq!(extract_ident("abc dfe"), (" dfe", "abc"));
     }
+
+    #[test]
+    fn extract_alphanumeric_ident() {
+        assert_eq!(extract_ident("foobar1 ascv"), (" ascv", "foobar1"));
+    }
+
     #[test]
     fn cannot_extract_ident_beginning_with_number() {
         assert_eq!(extract_ident("1234abce wer"), ("1234abce wer", ""));
