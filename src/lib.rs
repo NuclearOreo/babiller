@@ -1,14 +1,14 @@
-pub mod binding_def;
-pub mod expr;
-pub mod stmt;
-pub mod val;
+mod binding_def;
+mod expr;
+mod stmt;
+mod val;
 
 mod env;
 mod utils;
 
-pub struct Parse(stmt::Stmt);
+struct Parse(stmt::Stmt);
 
-pub fn parse(s: &str) -> Result<Parse, String> {
+fn parse(s: &str) -> Result<Parse, String> {
     let (s, stmt) = stmt::Stmt::new(s)?;
 
     if s.is_empty() {

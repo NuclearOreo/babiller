@@ -3,12 +3,12 @@ use crate::utils;
 use crate::val::Val;
 
 #[derive(Debug, PartialEq)]
-pub struct BindingUsage {
-    pub name: String,
+pub(crate) struct BindingUsage {
+    pub(crate) name: String,
 }
 
 impl BindingUsage {
-    pub fn new(s: &str) -> Result<(&str, Self), String> {
+    pub(crate) fn new(s: &str) -> Result<(&str, Self), String> {
         let (s, name) = utils::extract_ident(s)?;
 
         Ok((
