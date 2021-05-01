@@ -1,10 +1,12 @@
 mod binding_def;
+mod env;
 mod expr;
 mod stmt;
+mod utils;
 mod val;
 
-mod env;
-mod utils;
+pub use env::Env;
+pub use val::Val;
 
 struct Parse(stmt::Stmt);
 
@@ -15,5 +17,11 @@ fn parse(s: &str) -> Result<Parse, String> {
         Ok(Parse(stmt))
     } else {
         Err("input was not consumed fully by parser".to_string())
+    }
+}
+
+impl Parse {
+    pub fn eval(&self, env: &mut Env) -> Result<Val, String> {
+        self.0.eval(env)
     }
 }
