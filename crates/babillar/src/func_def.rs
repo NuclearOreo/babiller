@@ -20,6 +20,7 @@ impl FuncDef {
             |s| utils::extract_ident(s).map(|(s, ident)| (s, ident.to_string())),
             s,
         )?;
+
         let s = utils::tag("=>", s)?;
         let (s, _) = utils::extract_whitespace(s);
 
@@ -50,6 +51,21 @@ mod tests {
                 FuncDef {
                     name: "nothing".to_string(),
                     params: Vec::new(),
+                    body: Box::new(Stmt::Expr(Expr::Block(Block { stmts: Vec::new() }))),
+                },
+            )),
+        );
+    }
+
+    #[test]
+    fn parse_func_def_with_one_param_and_empty_body() {
+        assert_eq!(
+            FuncDef::new("fn greet name => {}"),
+            Ok((
+                "",
+                FuncDef {
+                    name: "greet".to_string(),
+                    params: vec!["name".to_string()],
                     body: Box::new(Stmt::Expr(Expr::Block(Block { stmts: Vec::new() }))),
                 },
             )),
