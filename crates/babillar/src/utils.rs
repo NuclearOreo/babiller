@@ -41,14 +41,14 @@ pub(crate) fn extract_digits(s: &str) -> Result<(&str, &str), String> {
     take_while1(|c| c.is_ascii_digit(), s, "expected digits".to_string())
 }
 
-pub(crate) fn extract_op(s: &str) -> (&str, &str) {
-    match &s[0..1] {
-        "+" | "-" | "*" | "/" => {}
-        _ => panic!("bad operator"),
-    }
+// pub(crate) fn extract_op(s: &str) -> (&str, &str) {
+//     match &s[0..1] {
+//         "+" | "-" | "*" | "/" => {}
+//         _ => panic!("bad operator"),
+//     }
 
-    (&s[1..], &s[0..1])
-}
+//     (&s[1..], &s[0..1])
+// }
 
 pub(crate) fn tag<'a, 'b>(starting_text: &'a str, s: &'b str) -> Result<&'b str, String> {
     if s.starts_with(starting_text) {
@@ -70,6 +70,23 @@ pub(crate) fn extract_ident(s: &str) -> Result<(&str, &str), String> {
     } else {
         Err("expected identifier".to_string())
     }
+}
+
+pub(crate) fn sequence<T>(
+    parser: impl Fn(&str) -> Result<(&str, T), String>,
+    mut s: &str,
+) -> Result<(&str, Vec<T>), String> {
+    let mut items = Vec::new();
+
+    while let Ok((new_s, item)) = parser(s) {
+        s = new_s;
+        items.push(item);
+
+        let (new_s, _) = extract_whitespace(s);
+        s = new_s;
+    }
+
+    Ok((s, items))
 }
 
 #[cfg(test)]
@@ -95,25 +112,25 @@ mod tests {
         assert_eq!(extract_digits("100"), Ok(("", "100")));
     }
 
-    #[test]
-    fn extract_plus() {
-        assert_eq!(extract_op("+2"), ("2", "+"));
-    }
+    // #[test]
+    // fn extract_plus() {
+    //     assert_eq!(extract_op("+2"), ("2", "+"));
+    // }
 
-    #[test]
-    fn extract_minus() {
-        assert_eq!(extract_op("-10"), ("10", "-"));
-    }
+    // #[test]
+    // fn extract_minus() {
+    //     assert_eq!(extract_op("-10"), ("10", "-"));
+    // }
 
-    #[test]
-    fn extract_star() {
-        assert_eq!(extract_op("*3"), ("3", "*"));
-    }
+    // #[test]
+    // fn extract_star() {
+    //     assert_eq!(extract_op("*3"), ("3", "*"));
+    // }
 
-    #[test]
-    fn extract_slash() {
-        assert_eq!(extract_op("/4"), ("4", "/"));
-    }
+    // #[test]
+    // fn extract_slash() {
+    //     assert_eq!(extract_op("/4"), ("4", "/"));
+    // }
 
     #[test]
     fn extract_spaces() {
