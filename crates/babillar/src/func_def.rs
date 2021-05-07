@@ -1,7 +1,8 @@
+use crate::env::Env;
 use crate::stmt::Stmt;
 use crate::utils;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub(crate) struct FuncDef {
     pub(crate) name: String,
     pub(crate) params: Vec<String>,
@@ -34,6 +35,11 @@ impl FuncDef {
                 body: Box::new(body),
             },
         ))
+    }
+
+    pub(crate) fn eval(&self, env: &mut Env) -> Result<(), String> {
+        env.store_func(self.name.clone(), self.params.clone(), *self.body.clone());
+        Ok(())
     }
 }
 
