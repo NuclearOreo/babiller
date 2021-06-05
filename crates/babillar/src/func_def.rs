@@ -79,7 +79,6 @@ mod tests {
     }
 
     #[test]
-    #[test]
     fn parse_func_def_with_multiple_params() {
         assert_eq!(
             FuncDef::new("fn add x y => x + y"),
