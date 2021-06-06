@@ -89,6 +89,19 @@ pub(crate) fn sequence<T>(
     Ok((s, items))
 }
 
+pub(crate) fn sequence1<T>(
+    parser: impl Fn(&str) -> Result<(&str, T), String>,
+    s: &str,
+) -> Result<(&str, Vec<T>), String> {
+    let (s, sequence) = sequence(parser, s)?;
+
+    if sequence.is_empty() {
+        Err("expected a sequence with more than one item".to_string())
+    } else {
+        Ok((s, sequence))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

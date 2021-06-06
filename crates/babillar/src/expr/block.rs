@@ -68,7 +68,7 @@ mod tests {
     }
 
     #[test]
-    fn parse_block_with_multiple_stmt() {
+    fn parse_block_with_multiple_stmts() {
         assert_eq!(
             Block::new(
                 "{
