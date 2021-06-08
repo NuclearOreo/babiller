@@ -13,7 +13,7 @@ impl Block {
         let s = utils::tag("{", s)?;
         let (s, _) = utils::extract_whitespace(s);
 
-        let (s, stmts) = utils::sequence(Stmt::new, s)?;
+        let (s, stmts) = utils::sequence(Stmt::new, utils::extract_whitespace, s)?;
 
         let (s, _) = utils::extract_whitespace(s);
         let s = utils::tag("}", s)?;
@@ -72,10 +72,10 @@ mod tests {
         assert_eq!(
             Block::new(
                 "{
-                let a = 10
-                let b = a
-                b
-            }"
+                    let a = 10
+                    let b = a
+                    b
+                }",
             ),
             Ok((
                 "",
@@ -94,8 +94,8 @@ mod tests {
                         Stmt::Expr(Expr::BindingUsage(BindingUsage {
                             name: "b".to_string(),
                         })),
-                    ]
-                }
+                    ],
+                },
             )),
         );
     }

@@ -10,9 +10,9 @@ pub(crate) struct FuncCall {
 impl FuncCall {
     pub(super) fn new(s: &str) -> Result<(&str, Self), String> {
         let (s, callee) = utils::extract_ident(s)?;
-        let (s, _) = utils::extract_whitespace1(s)?;
+        let (s, _) = utils::take_while(|c| c == ' ', s);
 
-        let (s, params) = utils::sequence1(Expr::new, s)?;
+        let (s, params) = utils::sequence1(Expr::new, |s| utils::take_while(|c| c == ' ', s), s)?;
 
         Ok((
             s,
@@ -23,7 +23,6 @@ impl FuncCall {
         ))
     }
 }
-
 #[cfg(test)]
 mod tests {
     use super::super::Number;
