@@ -17,13 +17,13 @@ impl NamedInfo {
         }
     }
 
-    // fn into_func(self) -> Option<(Vec<String>, Stmt)> {
-    //     if let Self::Func { params, body } = self {
-    //         Some((params, body))
-    //     } else {
-    //         None
-    //     }
-    // }
+    fn into_func(self) -> Option<(Vec<String>, Stmt)> {
+        if let Self::Func { params, body } = self {
+            Some((params, body))
+        } else {
+            None
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Default)]
@@ -54,11 +54,11 @@ impl<'parent> Env<'parent> {
             .ok_or_else(|| format!("binding with name ‘{}’ does not exist", name))
     }
 
-    // pub(crate) fn get_func(&self, name: &str) -> Result<(Vec<String>, Stmt), String> {
-    //     self.get_named_info(name)
-    //         .and_then(NamedInfo::into_func)
-    //         .ok_or_else(|| format!("function with name ‘{}’ does not exist", name))
-    // }
+    pub(crate) fn get_func(&self, name: &str) -> Result<(Vec<String>, Stmt), String> {
+        self.get_named_info(name)
+            .and_then(NamedInfo::into_func)
+            .ok_or_else(|| format!("function with name ‘{}’ does not exist", name))
+    }
 
     fn get_named_info(&self, name: &str) -> Option<NamedInfo> {
         self.named
