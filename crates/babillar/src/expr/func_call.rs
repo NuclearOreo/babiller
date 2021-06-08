@@ -1,5 +1,7 @@
 use super::Expr;
 use crate::utils;
+use crate::Env;
+use crate::Val;
 
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct FuncCall {
@@ -22,11 +24,26 @@ impl FuncCall {
             },
         ))
     }
+
+    pub(super) fn eval(&self, env: &Env) -> Result<Val, String> {
+        let mut child_env = env.create_child();
+
+        let (param_names, body) = env.get_func(&self.callee).unwrap();
+
+        for (param_name, param_expr) in param_names.into_iter().zip(&self.params) {
+            let param_val = param_expr.eval(&child_env)?;
+            child_env.store_binding(param_name, param_val);
+        }
+
+        body.eval(&mut child_env)
+    }
 }
+
 #[cfg(test)]
 mod tests {
-    use super::super::Number;
+    use super::super::{BindingUsage, Number};
     use super::*;
+    use crate::stmt::Stmt;
 
     #[test]
     fn parse_func_call_with_one_parameter() {
@@ -39,6 +56,28 @@ mod tests {
                     params: vec![Expr::Number(Number(10))],
                 },
             )),
+        );
+    }
+
+    #[test]
+    fn eval_func_call() {
+        let mut env = Env::default();
+
+        env.store_func(
+            "id".to_string(),
+            vec!["x".to_string()],
+            Stmt::Expr(Expr::BindingUsage(BindingUsage {
+                name: "x".to_string(),
+            })),
+        );
+
+        assert_eq!(
+            FuncCall {
+                callee: "id".to_string(),
+                params: vec![Expr::Number(Number(10))],
+            }
+            .eval(&env),
+            Ok(Val::Number(10)),
         );
     }
 }

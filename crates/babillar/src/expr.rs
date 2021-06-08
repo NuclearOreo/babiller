@@ -110,7 +110,7 @@ impl Expr {
 
                 Ok(Val::Number(result))
             }
-            Self::FuncCall(_) => todo!(),
+            Self::FuncCall(func_call) => func_call.eval(env),
             Self::BindingUsage(binding_usage) => binding_usage.eval(env),
             Self::Block(block) => block.eval(env),
         }
@@ -309,6 +309,34 @@ mod tests {
                     params: vec![Expr::Number(Number(1)), Expr::Number(Number(2))],
                 }),
             )),
+        );
+    }
+
+    #[test]
+    fn eval_func_call() {
+        let mut env = Env::default();
+
+        env.store_func(
+            "add".to_string(),
+            vec!["x".to_string(), "y".to_string()],
+            Stmt::Expr(Expr::Operation {
+                lhs: Box::new(Expr::BindingUsage(BindingUsage {
+                    name: "x".to_string(),
+                })),
+                rhs: Box::new(Expr::BindingUsage(BindingUsage {
+                    name: "y".to_string(),
+                })),
+                op: Op::Add,
+            }),
+        );
+
+        assert_eq!(
+            Expr::FuncCall(FuncCall {
+                callee: "add".to_string(),
+                params: vec![Expr::Number(Number(2)), Expr::Number(Number(2))],
+            })
+            .eval(&env),
+            Ok(Val::Number(4)),
         );
     }
 }
