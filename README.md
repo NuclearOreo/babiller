@@ -8,3 +8,4 @@ The project is mostly for learning purposes. Building myself a language (I'm cal
 
 - Build Source: `cargo build`
 - Run Tests: `cargo test`
+- CLI or REPL: `cargo r -q`
