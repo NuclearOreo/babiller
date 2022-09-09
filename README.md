@@ -1,4 +1,4 @@
-# Creating Myself a Language
+# Learning How to Crate a Programming Language
 
 [![Rust](https://github.com/NuclearOreo/babiller/actions/workflows/rust.yml/badge.svg?branch=master)](https://github.com/NuclearOreo/babiller/actions/workflows/rust.yml)
 
